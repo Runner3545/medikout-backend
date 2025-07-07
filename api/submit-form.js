@@ -14,7 +14,11 @@ export default async function handler(req, res) {
   }
 
   const G_SHEET_KEY = process.env.G_SHEET_KEY;
+  const G_SHEET_TOKEN = process.env.G_SHEET_TOKEN;
 
+  if (!G_SHEET_TOKEN) {
+    return res.status(500).json({ error: "G_SHEET_TOKEN not set" });
+  }
   if (!G_SHEET_KEY) {
     return res.status(500).json({ error: "G_SHEET_KEY not set" });
   }
@@ -27,7 +31,7 @@ export default async function handler(req, res) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(req.body),
+      body: JSON.stringify({ ...req.body, token: G_SHEET_TOKEN }),
     });
 
     const data = await response.json();
